@@ -34,10 +34,23 @@ class WeeklyWeatherCell: UICollectionViewCell {
         changeBackGround()
         
        let weatherVC = WeatherForecastController()
-    
+        
+        ZipCodeHelper.getLatLong(fromZipCode: weatherVC.zipCode) { [weak self](cityName) in
+            switch cityName {
+            case.failure( let error):
+                print(error)
+            case.success(let name):
+                DispatchQueue.main.async {
+                 
+                    self?.locationLabel.text = name.placeName.uppercased()
+                
+            }
+        }
+    }
        
-        locationLabel.text = "Location:\(weatherVC.cityName)"
+        
         locationLabel.textColor = .white
+        locationLabel.font = UIFont(name: "Didot", size: 20)
         descriptionLabel.textColor = .white
         descriptionLabel.text = "EXPECT:  \(dayOfTheWeek.icon.uppercased(with: .current)) "
         descriptionLabel.font = UIFont(name: "Didot", size: 25.0)

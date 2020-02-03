@@ -36,13 +36,19 @@ class WeatherForecastController: UIViewController {
         getForcast(with: zipCode)
     }
 
-    var cityName = ""
+    
+
+    
+    var cityName = "N/A"
+
     var zipCode = "11203" {
         didSet {
             DispatchQueue.main.async {
            
                 self.getForcast(with: self.zipCode)
                 self.collectionView.reloadData()
+                
+                
         }
     }
 }
@@ -54,9 +60,12 @@ class WeatherForecastController: UIViewController {
                 print(error)
                 
             case .success(let coordinates):
+                let detailVC = DetailViewController()
                 
-                self?.cityName = coordinates.placeName
+                detailVC.imageName = coordinates.placeName
+            
                 print(coordinates.placeName)
+                
                 WeatherAPIClient.getForcast(with: coordinates.lat, long: coordinates.long) { [weak self] (result) in
                     switch result {
                     case .failure(let error):
@@ -119,6 +128,7 @@ extension WeatherForecastController: UICollectionViewDelegateFlowLayout {
         let detailVC = DetailViewController()
         
         
+    
         navigationController?.pushViewController(detailVC, animated: true)
         
         
