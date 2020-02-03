@@ -11,11 +11,10 @@ import NetworkHelper
 
 struct WeatherAPIClient {
     
-    static func getForcast(for zipCode: String, completion: @escaping (Result<[Details],AppError>) -> () ) {
-        
+    static func getForcast(with lat: Double, long: Double, completion: @escaping (Result<[Details],AppError>) -> () ) {
 
         
-        let weatherForecastUrl = "https://api.darksky.net/forecast/830f4b6fb284e95da3d4baf7d280824f/\(zipCode)"
+        let weatherForecastUrl = "https://api.darksky.net/forecast/830f4b6fb284e95da3d4baf7d280824f/\(lat),\(long)"
         
         guard let url = URL(string: weatherForecastUrl) else {
             print(AppError.badURL(weatherForecastUrl))

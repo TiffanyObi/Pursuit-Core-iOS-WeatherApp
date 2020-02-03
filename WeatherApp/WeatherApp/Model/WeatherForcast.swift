@@ -9,7 +9,7 @@
 import Foundation
 
 struct WeatherForecast: Codable {
-    let timezone: String
+    let timezone: String?
     let daily: WeekForecast
 }
 
@@ -19,7 +19,9 @@ struct WeekForecast: Codable {
 
 struct Details: Codable {
     let summary: String
-    let precipType: String
+    let icon: String
+    let time: Double
+    let precipType: String?
     let temperatureHigh: Double
     let temperatureLow: Double
     let dewPoint: Double
