@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import DataPersistence
+
 
 class WeatherForecastController: UIViewController {
     
@@ -25,6 +27,8 @@ class WeatherForecastController: UIViewController {
         }
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,13 +38,17 @@ class WeatherForecastController: UIViewController {
         changeBackGround()
         collectionView.backgroundColor = UIColor(displayP3Red: 0.7, green: 0.1, blue: 0.4, alpha: 0.5)
         getForcast(with: zipCode)
+       
     }
 
     
-
+    var locationPictures = [Images]()
     
-    var cityName = "N/A"
-
+    var cityName = "N/A" {
+        didSet{
+            locationLabel.text = cityName
+    }
+}
     var zipCode = "11203" {
         didSet {
             DispatchQueue.main.async {
@@ -49,38 +57,62 @@ class WeatherForecastController: UIViewController {
                 self.collectionView.reloadData()
                 
                 
+                
         }
     }
 }
     private func getForcast(with string: String) {
         
-        ZipCodeHelper.getLatLong(fromZipCode: string) { [weak self](result) in
+        ZipCodeHelper.getLatLong(fromZipCode: string) { [weak self] (result) in
             switch result {
             case .failure(let error):
                 print(error)
                 
             case .success(let coordinates):
-                let detailVC = DetailViewController()
-                
-                detailVC.imageName = coordinates.placeName
-            
+
                 print(coordinates.placeName)
                 
-                WeatherAPIClient.getForcast(with: coordinates.lat, long: coordinates.long) { [weak self] (result) in
-                    switch result {
-                    case .failure(let error):
-                        print(error)
-                        
-                    case .success(let details):
-                        DispatchQueue.main.async {
-                        
-                        self?.weatherForTheWeek = details
-                    }
-                }
-            }
+                self?.cityName = coordinates.placeName
+                self?.getImage(for: coordinates.placeName)
+                
+                
+                self?.getCoordinates(lat: coordinates.lat, long: coordinates.long)
         }
     }
 }
+    
+    func getCoordinates(lat:Double, long: Double) {
+        WeatherAPIClient.getForcast(with: lat, long: long) { [weak self] (result) in
+                           switch result {
+                           case .failure(let error):
+                               print(error)
+                               
+                           case .success(let details):
+                               DispatchQueue.main.async {
+                                   
+                               self?.weatherForTheWeek = details
+                                   
+                           }
+                       }
+                   }
+    }
+    
+    func getImage(for string: String){
+        PhotoApiClient.getImageURL(with: string) { [weak self] (result) in
+            switch result {
+            case .failure(let error):
+                print("THIS IS THE ERROR\(error)")
+                
+            case .success(let images):
+                DispatchQueue.main.async {
+                    self?.locationPictures = images
+                    print(self?.locationPictures.first?.largeImageURL ?? "nothing here")
+                    
+                }
+                
+            }
+        }
+    }
     
    public func changeBackGround() {
        let  randRed = CGFloat.random(in: 0...1)
@@ -93,7 +125,7 @@ class WeatherForecastController: UIViewController {
 }
 extension WeatherForecastController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(weatherForTheWeek.count)
+//        print(weatherForTheWeek.count)
         return weatherForTheWeek.count
     }
     
@@ -106,6 +138,7 @@ extension WeatherForecastController: UICollectionViewDataSource {
         
         let cellInRow = weatherForTheWeek[indexPath.row]
         
+        dayOfTheWeekCell.locationLabel.text = cityName
         
         dayOfTheWeekCell.configureCell(for: cellInRow)
         
@@ -118,14 +151,19 @@ extension WeatherForecastController: UICollectionViewDataSource {
 extension WeatherForecastController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+        
        
         
-        return CGSize(width: 375, height: 450)
+        return CGSize(width: 400, height: 460)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        
         let detailVC = DetailViewController()
+        
+        detailVC.photo = locationPictures[indexPath.row]
+    
+        
         
         
     
@@ -136,7 +174,7 @@ extension WeatherForecastController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

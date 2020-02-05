@@ -7,14 +7,23 @@
 //
 
 import UIKit
+import NetworkHelper
+
+protocol FavoriteDelegate: AnyObject {
+    func didFavoriteImage()
+}
 
 class DetailView: UIView {
+    
+    
+ 
+    weak var delegate: FavoriteDelegate?
 let defaultMessage = "No default color set. please go to settings"
    public lazy var messageLabel: UILabel = {
           let label = UILabel()
           label.backgroundColor = .systemIndigo
           label.textAlignment = .center
-          label.font = UIFont(name: "Snell Roundhand", size: 20)
+          label.font = UIFont(name: "Didot", size: 30)
           label.text = defaultMessage
           label.textColor = .white
           return label
@@ -22,10 +31,27 @@ let defaultMessage = "No default color set. please go to settings"
     
     public lazy var cityImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.layer.borderColor = .init(srgbRed: 0.5, green: 0.4, blue: 0.3, alpha: 0.2)
-        imageView.backgroundColor = .yellow
+        imageView.backgroundColor = .black
+       
         return imageView
     }()
+    private var toggleButtonColor:Bool = true
+    public lazy var favoriteButton:UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .systemRed
+        button.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        
+        return button
+    }()
+    @objc private func saveButtonPressed(){
+        if toggleButtonColor == false {
+            favoriteButton.backgroundColor = .systemRed
+            toggleButtonColor = true } else if toggleButtonColor == true {
+            favoriteButton.backgroundColor = .systemBlue
+            toggleButtonColor = false
+        }
+        delegate?.didFavoriteImage()
+    }
     
        override init(frame: CGRect) {
            super.init(frame:UIScreen.main.bounds)
@@ -40,6 +66,7 @@ let defaultMessage = "No default color set. please go to settings"
        private func commonInit(){
         setupMessageLabelConstraints()
         setUpImageViewConstraints()
+        setUpButtonConstraints()
     }
     
         private func setupMessageLabelConstraints() {
@@ -76,6 +103,19 @@ let defaultMessage = "No default color set. please go to settings"
             cityImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
             cityImageView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.4)
         
+        
+        ])
+    }
+
+    func setUpButtonConstraints() {
+        addSubview(favoriteButton)
+        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+        
+            favoriteButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 100),
+            favoriteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -100),
+            favoriteButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200)
         
         ])
     }

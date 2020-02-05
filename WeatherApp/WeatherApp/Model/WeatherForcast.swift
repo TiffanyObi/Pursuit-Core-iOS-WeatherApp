@@ -28,3 +28,6 @@ struct Details: Codable {
     let humidity: Double
     let windGust: Double
 }
+
+
+
