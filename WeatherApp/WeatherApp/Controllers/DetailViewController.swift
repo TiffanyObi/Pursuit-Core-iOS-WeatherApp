@@ -39,21 +39,21 @@ class DetailViewController: UIViewController, FavoriteDelegate {
         view = detailView
     }
 
-    var photo: Images!
+    var photo: Images?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBlue
+        view.backgroundColor = .systemTeal
         detailView.delegate = self
        updateUI()
     }
     private var saveImageData: UIImage!
     
     private func updateUI () {
-        detailView.cityImageView.getImage(with: photo.largeImageURL) { [weak self] (result) in
+        detailView.cityImageView.getImage(with: photo?.largeImageURL ?? "") { [weak self] (result) in
             switch result {
-            case.failure(let appError):
-                print(appError)
+            case.failure:
+                self?.detailView.cityImageView.image = UIImage(systemName: "exclamation_mark")
                 
             case.success(let image):
                 DispatchQueue.main.async {

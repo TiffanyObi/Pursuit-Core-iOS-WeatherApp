@@ -24,16 +24,15 @@ class WeeklyWeatherCell: UICollectionViewCell {
     @IBOutlet weak var humiditylabel: UILabel!
     
     
+   
     
-
+    
 
     private var cityNameString = "N/A" {
         didSet {
             locationLabel.text = cityNameString
         }
     }
-    
-   
     
     public func configureCell(for dayOfTheWeek: Details) {
         

@@ -12,8 +12,8 @@ struct CityImage: Equatable, Codable {
 }
 
 struct Images:Equatable, Codable {
-    let largeImageURL : String
-    let webformatHeight: Double
+    let largeImageURL : String?
+    let webformatHeight: Double?
 }
 
 struct ImageData:Equatable, Codable {

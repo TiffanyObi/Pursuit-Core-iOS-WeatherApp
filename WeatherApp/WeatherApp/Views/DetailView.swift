@@ -16,9 +16,10 @@ protocol FavoriteDelegate: AnyObject {
 class DetailView: UIView {
     
     
+    
  
-    weak var delegate: FavoriteDelegate?
-let defaultMessage = "No default color set. please go to settings"
+weak var delegate: FavoriteDelegate?
+let defaultMessage = ""
    public lazy var messageLabel: UILabel = {
           let label = UILabel()
           label.backgroundColor = .systemIndigo
@@ -38,6 +39,8 @@ let defaultMessage = "No default color set. please go to settings"
     private var toggleButtonColor:Bool = true
     public lazy var favoriteButton:UIButton = {
         let button = UIButton()
+        button.setTitle("Favorite This Photo?", for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemRed
         button.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         
@@ -46,8 +49,11 @@ let defaultMessage = "No default color set. please go to settings"
     @objc private func saveButtonPressed(){
         if toggleButtonColor == false {
             favoriteButton.backgroundColor = .systemRed
+            favoriteButton.setTitle("Favorite This Photo", for: .normal)
             toggleButtonColor = true } else if toggleButtonColor == true {
+            favoriteButton.isEnabled = false
             favoriteButton.backgroundColor = .systemBlue
+             favoriteButton.setTitle("Saved To Favorites", for: .normal)
             toggleButtonColor = false
         }
         delegate?.didFavoriteImage()
@@ -67,6 +73,7 @@ let defaultMessage = "No default color set. please go to settings"
         setupMessageLabelConstraints()
         setUpImageViewConstraints()
         setUpButtonConstraints()
+        
     }
     
         private func setupMessageLabelConstraints() {
