@@ -227,7 +227,7 @@ extension WeatherForecastController: UICollectionViewDelegateFlowLayout {
         detailVC.detailView.backgroundColor = UIColor(displayP3Red: 0.2, green: 0.1, blue: 0.5, alpha: 0.6)
         
         detailVC.photo = locationPictures[indexPath.row]
-    
+        detailVC.details = weatherForTheWeek[indexPath.row]
     
     
         navigationController?.pushViewController(detailVC, animated: true)

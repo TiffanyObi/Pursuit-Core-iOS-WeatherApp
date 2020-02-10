@@ -14,11 +14,8 @@ protocol FavoriteDelegate: AnyObject {
 }
 
 class DetailView: UIView {
-    
-    
-    
- 
 weak var delegate: FavoriteDelegate?
+    
 let defaultMessage = ""
    public lazy var messageLabel: UILabel = {
           let label = UILabel()
@@ -33,10 +30,13 @@ let defaultMessage = ""
     public lazy var cityImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .black
+        
        
         return imageView
     }()
+    
     private var toggleButtonColor:Bool = true
+    
     public lazy var favoriteButton:UIButton = {
         let button = UIButton()
         button.setTitle("Favorite This Photo?", for: .normal)
@@ -59,6 +59,31 @@ let defaultMessage = ""
         delegate?.didFavoriteImage()
     }
     
+    public lazy var summaryLabel: UILabel = {
+        let summary = UILabel()
+        summary.text = "HELLO!!"
+        summary.font = UIFont(name: "Noteworthy", size: 25.0)
+        
+        return summary
+    }()
+    
+    public lazy var dewPointLabel: UILabel = {
+        let dewPoint = UILabel()
+        dewPoint.text = "HELLO!!"
+        dewPoint.font = UIFont(name: "Noteworthy", size: 25.0)
+        return dewPoint
+    }()
+    
+    public lazy var stack: UIStackView = {
+        
+        let stack = UIStackView()
+    
+        
+        return stack
+    }()
+    
+    
+   
        override init(frame: CGRect) {
            super.init(frame:UIScreen.main.bounds)
            commonInit()
@@ -73,7 +98,8 @@ let defaultMessage = ""
         setupMessageLabelConstraints()
         setUpImageViewConstraints()
         setUpButtonConstraints()
-        
+        setupStackViewConstraints()
+
     }
     
         private func setupMessageLabelConstraints() {
@@ -105,14 +131,46 @@ let defaultMessage = ""
         
         NSLayoutConstraint.activate([
             
-            cityImageView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 40),
-            cityImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            cityImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            cityImageView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.4)
+            cityImageView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
+            cityImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 8),
+            cityImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -8),
+            cityImageView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.60)
         
         
         ])
     }
+    private func setupStackViewConstraints(){
+        
+        stack.distribution = .equalSpacing
+        
+       summaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        dewPointLabel.translatesAutoresizingMaskIntoConstraints = false
+       
+        
+        // set contriants - center x is horizontal, center y is vertical
+        addSubview(stack)
+        
+        stack.addArrangedSubview(summaryLabel)
+        stack.addArrangedSubview(dewPointLabel)
+       
+        
+        
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 20
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            
+            stack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            stack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            stack.bottomAnchor.constraint(equalTo: favoriteButton.topAnchor, constant: -50)
+            
+            
+        ])
+         print("is this showing??")
+    }
+    
 
     func setUpButtonConstraints() {
         addSubview(favoriteButton)
@@ -122,7 +180,7 @@ let defaultMessage = ""
         
             favoriteButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 100),
             favoriteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -100),
-            favoriteButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200)
+            favoriteButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100)
         
         ])
     }

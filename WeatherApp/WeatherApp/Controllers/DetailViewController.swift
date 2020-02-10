@@ -40,16 +40,22 @@ class DetailViewController: UIViewController, FavoriteDelegate {
     }
 
     var photo: Images?
+    var details: Details!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemTeal
         detailView.delegate = self
-       updateUI()
+       updateUI(details)
     }
     private var saveImageData: UIImage!
     
-    private func updateUI () {
+    private func updateUI (_ details: Details) {
+        
+        detailView.summaryLabel.text = details.summary
+        detailView.dewPointLabel.text = "Dew Point - \(details.dewPoint)"
+        
+      
         detailView.cityImageView.getImage(with: photo?.largeImageURL ?? "") { [weak self] (result) in
             switch result {
             case.failure:
