@@ -41,8 +41,9 @@ class WeatherForecastController: UIViewController {
         collectionView.isPagingEnabled = true
         zipCodeTextFeild.delegate = self
         changeBackGround()
-registerForKerboardNoftifications()
+        registerForKerboardNoftifications()
         collectionView.backgroundColor = UIColor(displayP3Red: 0.7, green: 0.1, blue: 0.4, alpha: 0.5)
+        
         getForcast(with: zipCode)
        
     }
@@ -50,6 +51,11 @@ registerForKerboardNoftifications()
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         unregisterForKeyboardNotifications()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        print(zipCode = UserDefaults.standard.object(forKey: "zipcode") as? String ?? "11203")
+        zipCodeTextFeild.text = zipCode
     }
     
     
@@ -62,12 +68,12 @@ registerForKerboardNoftifications()
 }
     var zipCode = "11203" {
         didSet {
+            
+            
             DispatchQueue.main.async {
            
                 self.getForcast(with: self.zipCode)
                 self.collectionView.reloadData()
-                
-                
                 
         }
     }
@@ -253,6 +259,8 @@ extension WeatherForecastController: UITextFieldDelegate {
         }
     textField.resignFirstResponder()
         zipCode = textField.text ?? "90210"
+        
+        UserDefaults.standard.set(zipCode, forKey: "zipcode")
         
         changeBackGround()
         return true

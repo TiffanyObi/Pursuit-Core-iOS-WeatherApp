@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import NetworkHelper
+
 
 protocol FavoriteDelegate: AnyObject {
     func didFavoriteImage()
